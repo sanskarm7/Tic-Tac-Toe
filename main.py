@@ -1,4 +1,6 @@
 import random
+import copy
+import sys
 
 
 def main():
@@ -7,6 +9,15 @@ def main():
         [None, None, None],
         [None, None, None]
     ]
+    # for b1 in generator(board, True):
+    #     for b2 in generator(b1, False):
+    #         display_board(b2)
+    #         print(" ")
+    g = generator(board, True)
+    print(g)
+    b1_1 = next(g)
+    display_board(b1_1)
+    sys.exit()
     display_board(board)
 
     turn = True
@@ -67,6 +78,18 @@ def comp_turn(board):
 def display_board(board):
     for row in board:
         print(row)
+
+
+def generator(board, turn):
+    for i in range(len(board)):
+        for j in range(len(board[i])):
+            if board[i][j] is None:
+                board_copy = copy.deepcopy(board)
+                board_copy[i][j] = "x" if turn else "o"
+                yield board_copy
+
+
+
 
 
 if __name__ == '__main__':
