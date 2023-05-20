@@ -5,9 +5,9 @@ import sys
 
 def main():
     board = [
-        [None, None, None],
-        [None, None, None],
-        [None, None, None]
+        ["-", "-", "-"],
+        ["-", "-", "-"],
+        ["-", "-", "-"]
     ]
     # for b1 in generator(board, True):
     #     for b2 in generator(b1, False):
@@ -43,18 +43,18 @@ def main():
 
 def winner(board):
     for row in board:
-        if row[0] == row[1] and row[1] == row[2] and row[1] is not None:
+        if row[0] == row[1] and row[1] == row[2] and row[1] != "-":
             return row[1]
     for j in range(len(board)):
-        if board[0][j] == board[1][j] and board[1][j] == board[2][j] and board[1][j] is not None:
+        if board[0][j] == board[1][j] and board[1][j] == board[2][j] and board[1][j] != "-":
             return board[1][j]
-    if board[0][0] == board[1][1] and board[1][1] == board[2][2] and board[1][1] is not None:
+    if board[0][0] == board[1][1] and board[1][1] == board[2][2] and board[1][1] != "-":
         return board[1][1]
-    if board[0][2] == board[1][1] and board[1][1] == board[2][0] and board[1][1] is not None:
+    if board[0][2] == board[1][1] and board[1][1] == board[2][0] and board[1][1] != "-":
         return board[1][1]
     for row in board:
         for val in row:
-            if val is None:
+            if val == "-":
                 return None
     return "s"
 
@@ -86,7 +86,7 @@ def display_board(board):
 def generator(board, turn):
     for i in range(len(board)):
         for j in range(len(board[i])):
-            if board[i][j] is None:
+            if board[i][j] == "-":
                 board_copy = copy.deepcopy(board)
                 board_copy[i][j] = "x" if turn else "o"
                 yield board_copy
