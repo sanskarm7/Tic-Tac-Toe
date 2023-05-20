@@ -13,11 +13,11 @@ def main():
     #     for b2 in generator(b1, False):
     #         display_board(b2)
     #         print(" ")
-    g = generator(board, True)
-    print(g)
-    b1_1 = next(g)
-    display_board(b1_1)
-    sys.exit()
+    # g = generator(board, True)
+    # print(g)
+    # b1_1 = next(g)
+    # display_board(b1_1)
+    # sys.exit()
     display_board(board)
 
     turn = True
@@ -67,12 +67,15 @@ def player_turn(board):
 
 
 def comp_turn(board):
-    while True:
-        row = random.randint(0, 2)
-        col = random.randint(0, 2)
-        if board[row][col] is None:
-            board[row][col] = 'o'
-            return
+    # while True:
+    #     row = random.randint(0, 2)
+    #     col = random.randint(0, 2)
+    #     if board[row][col] is None:
+    #         board[row][col] = 'o'
+    #         return
+    score, state = minimax(board)
+    for i in range(len(board)):
+        board[i] = state[i]
 
 
 def display_board(board):
@@ -87,6 +90,49 @@ def generator(board, turn):
                 board_copy = copy.deepcopy(board)
                 board_copy[i][j] = "x" if turn else "o"
                 yield board_copy
+
+def scoring(board):
+    s = winner(board)
+
+    if s == 'x':
+        return 100
+    if s == 'o':
+        return -100
+    if s == 's':
+        return 0
+    return None
+
+def minimax(board):
+    score = scoring(board)
+    if score is not None:
+        return score, None
+    scores = []
+    states = list(generator(board, False))
+    for state in states:
+        scores.append(maximin(state)[0])
+    i = 0
+    for j in range(1, len(scores)):
+        if scores[j] < scores[i]:
+            i = j
+
+    return scores[i], states[i]
+
+def maximin(board):
+    score = scoring(board)
+    if score is not None:
+        return score, None
+    scores = []
+    states = list(generator(board, True))
+    for state in states:
+        scores.append(minimax(state)[0])
+    i = 0
+    for j in range(1, len(scores)):
+        if scores[j] > scores[i]:
+            i = j
+
+    return scores[i], states[i]
+
+
 
 
 
