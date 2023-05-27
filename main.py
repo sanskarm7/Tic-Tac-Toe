@@ -73,7 +73,7 @@ def comp_turn(board):
     #     if board[row][col] is None:
     #         board[row][col] = 'o'
     #         return
-    score, state = minimax(board)
+    score, state = minimax(board, 0)
     for i in range(len(board)):
         board[i] = state[i]
 
@@ -91,25 +91,26 @@ def generator(board, turn):
                 board_copy[i][j] = "x" if turn else "o"
                 yield board_copy
 
-def scoring(board):
+def scoring(board, depth):
     s = winner(board)
 
     if s == 'x':
-        return 100
+        return 100 - depth
     if s == 'o':
-        return -100
+        return -100 + depth
     if s == 's':
         return 0
     return None
 
-def minimax(board):
-    score = scoring(board)
+def minimax(board, depth):
+
+    score = scoring(board, depth)
     if score is not None:
         return score, None
     scores = []
     states = list(generator(board, False))
     for state in states:
-        scores.append(maximin(state)[0])
+        scores.append(maximin(state, depth+1)[0])
     i = 0
     for j in range(1, len(scores)):
         if scores[j] < scores[i]:
@@ -117,14 +118,14 @@ def minimax(board):
 
     return scores[i], states[i]
 
-def maximin(board):
-    score = scoring(board)
+def maximin(board, depth):
+    score = scoring(board, depth)
     if score is not None:
         return score, None
     scores = []
     states = list(generator(board, True))
     for state in states:
-        scores.append(minimax(state)[0])
+        scores.append(minimax(state, depth+1)[0])
     i = 0
     for j in range(1, len(scores)):
         if scores[j] > scores[i]:
